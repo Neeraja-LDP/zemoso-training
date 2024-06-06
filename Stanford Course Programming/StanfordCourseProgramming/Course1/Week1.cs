@@ -94,7 +94,7 @@ namespace Course1
         }
 
         /**
-         * Method to  subtract two strings containing numbers
+         * Method to subtract two strings containing numbers
         */
         private static string SubtractStrings(string num1, string num2)
         {
