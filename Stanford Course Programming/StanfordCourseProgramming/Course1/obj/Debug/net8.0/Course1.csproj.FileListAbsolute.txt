@@ -1,0 +1,15 @@
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\bin\Debug\net8.0\Course1.exe
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\bin\Debug\net8.0\Course1.deps.json
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\bin\Debug\net8.0\Course1.runtimeconfig.json
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\bin\Debug\net8.0\Course1.dll
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\bin\Debug\net8.0\Course1.pdb
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\obj\Debug\net8.0\Course1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\obj\Debug\net8.0\Course1.AssemblyInfoInputs.cache
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\obj\Debug\net8.0\Course1.AssemblyInfo.cs
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\obj\Debug\net8.0\Course1.csproj.CoreCompileInputs.cache
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\obj\Debug\net8.0\Course1.sourcelink.json
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\obj\Debug\net8.0\Course1.dll
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\obj\Debug\net8.0\refint\Course1.dll
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\obj\Debug\net8.0\Course1.pdb
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\obj\Debug\net8.0\Course1.genruntimeconfig.cache
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\StanfordCourseProgramming\Course1\obj\Debug\net8.0\ref\Course1.dll
