@@ -1,0 +1,134 @@
+package course1;
+
+public class Week4_MinCuts 
+{
+	class Edge 
+	{
+	    int source, destination; // Represents an edge with a source and destination vertex
+	}
+	
+	class Graph 
+	{
+	    int vertices, edges; // Number of vertices and edges in the graph
+	    Edge[] edgeArray; // Array to hold all the edges of the graph
+
+	    // Constructor to create a graph with given vertices and edges
+	    Graph(int vertices, int edges) 
+	    {
+	        this.vertices = vertices;
+	        this.edges = edges;
+	        edgeArray = new Edge[edges];
+	        for (int i = 0; i < edges; ++i) 
+	        {
+	            edgeArray[i] = new Edge();
+	        }
+	    }
+	}
+
+	class Subset 
+	{
+	    int parent, rank; // Used for union-find structure to keep track of the parent and rank of each subset
+	}
+
+	public class KargerMinCut 
+	{
+	    // Function to find the parent of an element at i
+	    int find(Subset[] subsets, int i) 
+	    {
+	        // If i is not a parent
+	        if (subsets[i].parent != i) 
+	        {
+	            subsets[i].parent = find(subsets, subsets[i].parent);
+	        }
+	        
+	        // If i is a parent
+	        return subsets[i].parent;
+	    }
+
+	    // Function to union two subsets x and y
+	    void union(Subset[] subsets, int x, int y) 
+	    {
+	    	// Finding the parents of x and y
+	        int xroot = find(subsets, x);
+	        int yroot = find(subsets, y);
+
+	        // If the parent of x has a less rank than the parent of y,
+	        // y's parent becomes x's parent
+	        if (subsets[xroot].rank < subsets[yroot].rank) 
+	        {
+	            subsets[xroot].parent = yroot;
+	        } 
+	        else if (subsets[xroot].rank > subsets[yroot].rank) 
+	        {
+	            subsets[yroot].parent = xroot;
+	        } 
+	        else		// if the ranks are the same, make x's parent y's parent and increase the rank of y
+	        {
+	            subsets[yroot].parent = xroot;
+	            subsets[xroot].rank++;
+	        }
+	    }
+
+	    // Function to perform the randomized contraction algorithm
+	    int randomContraction(Graph graph) 
+	    {
+	        int vertices = graph.vertices; 
+	        int edges = graph.edges;
+	        Edge[] edgeArray = graph.edgeArray;
+
+	        // Initialize subsets for union-find
+	        Subset[] subsets = new Subset[vertices];
+	        for (int v = 0; v < vertices; v++) 
+	        {
+	            subsets[v] = new Subset();
+	            subsets[v].parent = v;
+	            subsets[v].rank = 0;		// setting rank to zero
+	        }
+
+	        int currentVertices = vertices;
+
+	        // Repeat until only two vertices remain
+	        while (currentVertices > 2) 
+	        {
+	            // Pick a random edge
+	            int i = (int) (Math.random() * edges);
+	            
+	            // Finding the parents of the source and destination vertices
+	            int subset1 = find(subsets, edgeArray[i].source);
+	            int subset2 = find(subsets, edgeArray[i].destination);
+
+	            // Ignore if both endpoints are in the same subset (nothing to merge)
+	            if (subset1 == subset2) continue;
+
+	            // Otherwise, contract the edge (merge the subsets)
+	            union(subsets, subset1, subset2);
+	            currentVertices--;		// decrementing the number of vertices
+	        }
+
+	        // Count the number of edges crossing the cut
+	        int cutEdges = 0;
+	        
+	        // iterating through all the edges
+	        for (int i = 0; i < edges; i++) 
+	        {
+	            int subset1 = find(subsets, edgeArray[i].source);
+	            int subset2 = find(subsets, edgeArray[i].destination);
+	            
+	            if (subset1 != subset2) 
+	            {
+	            	cutEdges++;
+	            }
+	        }
+	        return cutEdges;
+	    }
+
+	    // Function to create a graph with given vertices and edges
+	    Graph NewGraph(int vertices, int edges) 
+	    {
+	        return new Graph(vertices, edges);
+	    }
+	}
+
+}
+
+

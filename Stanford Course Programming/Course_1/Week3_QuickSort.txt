@@ -1,0 +1,61 @@
+package course1;
+
+public class Week3_QuickSort 
+{
+	public static int QuickSort(int[] array , int low , int high)
+	{
+		// Return if the array's length is less than or equal to 1
+		if(array.length <= 1)
+			return 0;
+		
+		// First element is the pivot
+		// int pivot = array[low];
+		
+		// Partition array around the pivot
+		int position = Partition(array , low , high);
+		
+		// Number of comparisons
+		int x = high - low;
+		
+		// recursively sort 1st part
+		int y = QuickSort(array , low , position - 1);
+		
+		// recursively sort 2nd part
+		int z = QuickSort(array , position + 1 , high);
+		
+		return x + y + z;
+	}
+	
+	public static int Partition(int[] array , int low , int high)
+	{
+		int pivot = array[low];	// First element is the pivot
+		
+		int i = low + 1;		// Separates elements that are less than the pivot from
+								// elements that are greater than the pivot
+		
+		int j = low + 1;		// Separates elements that haven't been looked at from
+								// elements that have been looked at
+		
+		for(j = low + 1 ; j <= high ; j++)
+		{
+			if(array[j] < pivot)
+			{
+				swap(array[i] , array[j]);
+				i++;
+			}
+		}
+		
+		// Putting the pivot in the correct position
+		swap(array[low] , array[i - 1]);
+		
+		// Return the position of the pivot
+		return i - 1;	
+	}
+	
+	public static void swap(int i , int j)
+	{
+		int temp = i;
+		i = j;
+		j = temp;
+	}
+}

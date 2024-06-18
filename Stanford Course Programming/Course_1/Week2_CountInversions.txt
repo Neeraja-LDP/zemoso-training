@@ -1,0 +1,68 @@
+package course1;
+
+public class Week2_CountInversions 
+{
+	public static int Count(int[] array , int[] temp , int startIndex, int length) 
+	{
+		int x = 0;
+		int y = 0;
+		int z = 0;
+		
+		if(length == 1) 
+		{
+			return 0;
+		}
+		else
+		{
+			int middle = (length + 1)/2;
+			x = Count(array , temp , 1 , middle);
+			y = Count(array , temp , middle , length);
+			z = MergeAndCountSplitInversions(array , temp , startIndex , middle , length);
+		}
+		return x + y + z;
+	}
+	
+	public static int MergeAndCountSplitInversions(int[] array , int[] temp , int startIndex , int middle , int length)
+	{
+		int inversions = 0;
+		temp = new int[length];
+		int i = 0;
+		int j = 0;
+		int k = startIndex;
+		
+		while(i < middle && j <= length)
+		{
+			if(array[i] < array[j])
+			{
+				temp[k] = array[i];
+				k++;
+				i++;
+			}
+			else
+			{
+				temp[k] = array[j];
+				k++;
+				j++;
+				inversions += middle - i;
+			}
+			k++;
+		}
+		
+		// Copying the elements of temp to array
+		while(i != middle)
+		{
+            array[k] = temp[i];
+            i++;
+            k++;
+        }
+		
+		while(j != length)
+		{
+            array[k] = temp[j];
+            j++;
+            k++;
+        }
+		
+		return inversions;
+	}
+}
