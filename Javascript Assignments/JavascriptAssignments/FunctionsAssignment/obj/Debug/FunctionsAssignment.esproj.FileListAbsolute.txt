@@ -1,0 +1,2 @@
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Stanford Course Programming\JavascriptAssignments\FunctionsAssignment\obj\Debug\FunctionsAssignment.esproj.CoreCompileInputs.cache
+C:\Users\rajuv\OneDrive\Desktop\zemoso-training\Javascript Assignments\JavascriptAssignments\FunctionsAssignment\obj\Debug\FunctionsAssignment.esproj.CoreCompileInputs.cache

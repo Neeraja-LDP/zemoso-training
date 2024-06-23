@@ -1,0 +1,24 @@
+def search(keyword) :
+   # implement the function here
+   All_words = []
+   All_words.append(keyword)
+   for entry in Thesaurus:
+      if keyword == entry.word:
+         for synonym in entry.synonyms:
+            All_words.append(synonym)
+
+   for search_word in All_words:
+      counter = 0
+      for doc in Corpus:
+         for word in doc:
+            if search_word == word:
+               counter = counter + 1
+      print(search_word , counter)
+
+
+   return # modify to return a list of tuples
+
+input = "happy"
+output = search(input) # invoke the method using a test input
+print(output) # prints the output of the function
+# do not remove this line!

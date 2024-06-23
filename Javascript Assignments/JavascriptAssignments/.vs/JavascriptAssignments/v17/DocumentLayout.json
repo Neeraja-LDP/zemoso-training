@@ -1,0 +1,99 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\rajuv\\OneDrive\\Desktop\\zemoso-training\\Javascript Assignments\\JavascriptAssignments\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{610C9293-E8B7-4860-A0F7-8E02F980D390}|FunctionsAssignment\\FunctionsAssignment.esproj|c:\\users\\rajuv\\onedrive\\desktop\\zemoso-training\\javascript assignments\\javascriptassignments\\functionsassignment\\question2.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{610C9293-E8B7-4860-A0F7-8E02F980D390}|FunctionsAssignment\\FunctionsAssignment.esproj|solutionrelative:functionsassignment\\question2.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{610C9293-E8B7-4860-A0F7-8E02F980D390}|FunctionsAssignment\\FunctionsAssignment.esproj|c:\\users\\rajuv\\onedrive\\desktop\\zemoso-training\\javascript assignments\\javascriptassignments\\functionsassignment\\question1.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{610C9293-E8B7-4860-A0F7-8E02F980D390}|FunctionsAssignment\\FunctionsAssignment.esproj|solutionrelative:functionsassignment\\question1.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{610C9293-E8B7-4860-A0F7-8E02F980D390}|FunctionsAssignment\\FunctionsAssignment.esproj|c:\\users\\rajuv\\onedrive\\desktop\\zemoso-training\\javascript assignments\\javascriptassignments\\functionsassignment\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{610C9293-E8B7-4860-A0F7-8E02F980D390}|FunctionsAssignment\\FunctionsAssignment.esproj|solutionrelative:functionsassignment\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e506b91c-c606-466a-90a9-123d1d1e12b3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Question2.js",
+              "DocumentMoniker": "C:\\Users\\rajuv\\OneDrive\\Desktop\\zemoso-training\\Javascript Assignments\\JavascriptAssignments\\FunctionsAssignment\\Question2.js",
+              "RelativeDocumentMoniker": "FunctionsAssignment\\Question2.js",
+              "ToolTip": "C:\\Users\\rajuv\\OneDrive\\Desktop\\zemoso-training\\Javascript Assignments\\JavascriptAssignments\\FunctionsAssignment\\Question2.js",
+              "RelativeToolTip": "FunctionsAssignment\\Question2.js",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAALAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-06-18T20:22:09.717Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Question1.js",
+              "DocumentMoniker": "C:\\Users\\rajuv\\OneDrive\\Desktop\\zemoso-training\\Javascript Assignments\\JavascriptAssignments\\FunctionsAssignment\\Question1.js",
+              "RelativeDocumentMoniker": "FunctionsAssignment\\Question1.js",
+              "ToolTip": "C:\\Users\\rajuv\\OneDrive\\Desktop\\zemoso-training\\Javascript Assignments\\JavascriptAssignments\\FunctionsAssignment\\Question1.js",
+              "RelativeToolTip": "FunctionsAssignment\\Question1.js",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-06-18T20:17:27.223Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "app.js",
+              "DocumentMoniker": "C:\\Users\\rajuv\\OneDrive\\Desktop\\zemoso-training\\Javascript Assignments\\JavascriptAssignments\\FunctionsAssignment\\app.js",
+              "RelativeDocumentMoniker": "FunctionsAssignment\\app.js",
+              "ToolTip": "C:\\Users\\rajuv\\OneDrive\\Desktop\\zemoso-training\\Javascript Assignments\\JavascriptAssignments\\FunctionsAssignment\\app.js",
+              "RelativeToolTip": "FunctionsAssignment\\app.js",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-06-18T20:13:33.8Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,134 +1,177 @@
 package course1;
 
-public class Week4_MinCuts 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Random;
+
+class Edge 
 {
-	class Edge 
-	{
-	    int source, destination; // Represents an edge with a source and destination vertex
-	}
-	
-	class Graph 
-	{
-	    int vertices, edges; // Number of vertices and edges in the graph
-	    Edge[] edgeArray; // Array to hold all the edges of the graph
-
-	    // Constructor to create a graph with given vertices and edges
-	    Graph(int vertices, int edges) 
-	    {
-	        this.vertices = vertices;
-	        this.edges = edges;
-	        edgeArray = new Edge[edges];
-	        for (int i = 0; i < edges; ++i) 
-	        {
-	            edgeArray[i] = new Edge();
-	        }
-	    }
-	}
-
-	class Subset 
-	{
-	    int parent, rank; // Used for union-find structure to keep track of the parent and rank of each subset
-	}
-
-	public class KargerMinCut 
-	{
-	    // Function to find the parent of an element at i
-	    int find(Subset[] subsets, int i) 
-	    {
-	        // If i is not a parent
-	        if (subsets[i].parent != i) 
-	        {
-	            subsets[i].parent = find(subsets, subsets[i].parent);
-	        }
-	        
-	        // If i is a parent
-	        return subsets[i].parent;
-	    }
-
-	    // Function to union two subsets x and y
-	    void union(Subset[] subsets, int x, int y) 
-	    {
-	    	// Finding the parents of x and y
-	        int xroot = find(subsets, x);
-	        int yroot = find(subsets, y);
-
-	        // If the parent of x has a less rank than the parent of y,
-	        // y's parent becomes x's parent
-	        if (subsets[xroot].rank < subsets[yroot].rank) 
-	        {
-	            subsets[xroot].parent = yroot;
-	        } 
-	        else if (subsets[xroot].rank > subsets[yroot].rank) 
-	        {
-	            subsets[yroot].parent = xroot;
-	        } 
-	        else		// if the ranks are the same, make x's parent y's parent and increase the rank of y
-	        {
-	            subsets[yroot].parent = xroot;
-	            subsets[xroot].rank++;
-	        }
-	    }
-
-	    // Function to perform the randomized contraction algorithm
-	    int randomContraction(Graph graph) 
-	    {
-	        int vertices = graph.vertices; 
-	        int edges = graph.edges;
-	        Edge[] edgeArray = graph.edgeArray;
-
-	        // Initialize subsets for union-find
-	        Subset[] subsets = new Subset[vertices];
-	        for (int v = 0; v < vertices; v++) 
-	        {
-	            subsets[v] = new Subset();
-	            subsets[v].parent = v;
-	            subsets[v].rank = 0;		// setting rank to zero
-	        }
-
-	        int currentVertices = vertices;
-
-	        // Repeat until only two vertices remain
-	        while (currentVertices > 2) 
-	        {
-	            // Pick a random edge
-	            int i = (int) (Math.random() * edges);
-	            
-	            // Finding the parents of the source and destination vertices
-	            int subset1 = find(subsets, edgeArray[i].source);
-	            int subset2 = find(subsets, edgeArray[i].destination);
-
-	            // Ignore if both endpoints are in the same subset (nothing to merge)
-	            if (subset1 == subset2) continue;
-
-	            // Otherwise, contract the edge (merge the subsets)
-	            union(subsets, subset1, subset2);
-	            currentVertices--;		// decrementing the number of vertices
-	        }
-
-	        // Count the number of edges crossing the cut
-	        int cutEdges = 0;
-	        
-	        // iterating through all the edges
-	        for (int i = 0; i < edges; i++) 
-	        {
-	            int subset1 = find(subsets, edgeArray[i].source);
-	            int subset2 = find(subsets, edgeArray[i].destination);
-	            
-	            if (subset1 != subset2) 
-	            {
-	            	cutEdges++;
-	            }
-	        }
-	        return cutEdges;
-	    }
-
-	    // Function to create a graph with given vertices and edges
-	    Graph NewGraph(int vertices, int edges) 
-	    {
-	        return new Graph(vertices, edges);
-	    }
-	}
-
+    int source, destination;
 }
 
+class Graph 
+{
+    int vertices, edges;
+    Edge[] edgeArray;
+}
 
+class Subset 
+{
+    int parent;
+    int rank;
+}
+
+public class Week4_MinCuts 
+{
+
+    // Find the subset a particular element is in
+    static int find(Subset[] subsets, int i) 
+    {
+        if (subsets[i].parent != i) 
+        {
+            subsets[i].parent = find(subsets, subsets[i].parent);
+        }
+        return subsets[i].parent;
+    }
+
+    // Union of two subsets based on rank
+    static void union(Subset[] subsets, int x, int y) 
+    {
+        int xRoot = find(subsets, x);
+        int yRoot = find(subsets, y);
+
+        if (subsets[xRoot].rank < subsets[yRoot].rank) 
+        {
+            subsets[xRoot].parent = yRoot;
+        } 
+        else if (subsets[xRoot].rank > subsets[yRoot].rank) 
+        {
+            subsets[yRoot].parent = xRoot;
+        } 
+        else 
+        {
+            subsets[yRoot].parent = xRoot;
+            subsets[xRoot].rank++;
+        }
+    }
+
+    // Karger's Random Contraction Algorithm
+    static int randomContraction(Graph graph) 
+    {
+        int vertices = graph.vertices;
+        int edges = graph.edges;
+        Edge[] edgeArray = graph.edgeArray;
+
+        Subset[] subsets = new Subset[vertices];
+        for (int v = 0; v < vertices; ++v) 
+        {
+            subsets[v] = new Subset();
+            subsets[v].parent = v;
+            subsets[v].rank = 0;
+        }
+
+        int remainingVertices = vertices;
+        Random rand = new Random();
+
+        while (remainingVertices > 2) 
+        {
+            int i = rand.nextInt(edges);
+
+            int subset1 = find(subsets, edgeArray[i].source);
+            int subset2 = find(subsets, edgeArray[i].destination);
+
+            if (subset1 == subset2) continue;
+
+            union(subsets, subset1, subset2);
+            remainingVertices--;
+        }
+
+        int cutEdges = 0;
+        for (int i = 0; i < edges; i++) {
+            int subset1 = find(subsets, edgeArray[i].source);
+            int subset2 = find(subsets, edgeArray[i].destination);
+            if (subset1 != subset2) cutEdges++;
+        }
+        return cutEdges;
+    }
+
+    // Create a graph with V vertices and E edges
+    static Graph createGraph(int vertices, int edges) 
+    {
+        Graph graph = new Graph();
+        graph.vertices = vertices;
+        graph.edges = edges;
+        graph.edgeArray = new Edge[edges];
+        for (int i = 0; i < edges; ++i) 
+        {
+            graph.edgeArray[i] = new Edge();
+        }
+        return graph;
+    }
+
+    public static void main(String[] args) 
+    {
+        int vertices = 200;
+        int edges = 0;
+
+        // First pass to count the number of edges
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course1\\kargerMinCut.txt"))) 
+        {
+            String line;
+            while ((line = reader.readLine()) != null) 
+            {
+                String[] parts = line.split("\\s+");
+                int vertex = Integer.parseInt(parts[0]);
+                for (int i = 1; i < parts.length; i++) 
+                {
+                    int val = Integer.parseInt(parts[i]);
+                    if (val > vertex) edges++;
+                }
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        Graph graph = createGraph(vertices, edges);
+
+        // Second pass to fill the edge list
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course1\\kargerMinCut.txt"))) 
+        {
+            String line;
+            int edgeCount = 0;
+            while ((line = reader.readLine()) != null) 
+            {
+                String[] parts = line.split("\\s+");
+                int vertex = Integer.parseInt(parts[0]) - 1;
+                for (int i = 1; i < parts.length; i++) 
+                {
+                    int val = Integer.parseInt(parts[i]) - 1;
+                    if (val > vertex) 
+                    {
+                        graph.edgeArray[edgeCount].source = vertex;
+                        graph.edgeArray[edgeCount].destination = val;
+                        edgeCount++;
+                    }
+                }
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        int minCut = Integer.MAX_VALUE;
+        for (int i = 0; i < 200; i++) 
+        {
+            int cut = randomContraction(graph);
+            if (cut < minCut) 
+            {
+                minCut = cut;
+            }
+        }
+        System.out.println(minCut);
+    }
+}
