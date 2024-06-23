@@ -1,0 +1,83 @@
+package course2;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.PriorityQueue;
+
+public class Week3_Heaps  
+{
+    public static void main(String[] args) 
+    {
+        // Min heap for the larger half of the numbers
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        
+        // Max heap for the smaller half of the numbers
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        
+        // Initialize heaps with extreme values to avoid empty heap issues
+        maxHeap.add(0);
+        minHeap.add(99999);
+
+        int medianSum = 0; // Variable to store the sum of medians
+
+        // Read the file containing the stream of numbers
+        try (BufferedReader br = new BufferedReader(new FileReader("Median.txt"))) 
+        {
+            String line;
+            while ((line = br.readLine()) != null) 
+            {
+                int number = Integer.parseInt(line);
+
+                // Balancing the heaps and finding the median
+                if (minHeap.size() > maxHeap.size()) 
+                {
+                    if (number > minHeap.peek()) 
+                    {
+                        maxHeap.add(minHeap.poll());
+                        minHeap.add(number);
+                    } 
+                    else 
+                    {
+                        maxHeap.add(number);
+                    }
+                    medianSum = (medianSum + maxHeap.peek()) % 10000;
+                } 
+                else if (maxHeap.size() > minHeap.size()) 
+                {
+                    if (number < maxHeap.peek()) 
+                    {
+                        minHeap.add(maxHeap.poll());
+                        maxHeap.add(number);
+                    } 
+                    else 
+                    {
+                        minHeap.add(number);
+                    }
+                    medianSum = (medianSum + maxHeap.peek()) % 10000;
+                } 
+                else 
+                { // When both heaps have the same size
+                    if (number > minHeap.peek()) 
+                    {
+                        minHeap.add(number);
+                        medianSum = (medianSum + minHeap.peek()) % 10000;
+                    } 
+                    else 
+                    {
+                        maxHeap.add(number);
+                        medianSum = (medianSum + maxHeap.peek()) % 10000;
+                    }
+                }
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        // Print the sum of medians modulo 10000
+        System.out.println(medianSum);
+    }
+}
