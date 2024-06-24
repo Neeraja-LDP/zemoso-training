@@ -1,0 +1,60 @@
+package course2;
+
+import java.io.*;
+import java.util.*;
+
+public class Week4_HashSets 
+{
+	public static void main(String[] args)
+	{
+        // Initialize a list to store the numbers from the file
+        List<Long> numbersList = new ArrayList<>();
+
+        // Read the numbers from the file
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course2\\twoSum.txt"))) 
+        {
+            String line;
+            while ((line = br.readLine()) != null) 
+            {
+                numbersList.add(Long.parseLong(line));
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        // Convert the list to an array
+        long[] numbersArray = numbersList.stream().mapToLong(i -> i).toArray();
+
+
+        // Print the result
+        System.out.println("The number of targets are: " + twoSum(numbersArray));
+	}
+	
+	
+	public static int twoSum(long[] array)
+	{
+		Set<Long> hashSet = new HashSet<>();
+		int count = 0;
+		Arrays.sort(array);
+		
+		for(long i : array)
+		{
+			hashSet.add(i);
+		}
+		
+		for(long x : array)
+		{
+			for(int target = 10000 ; target >= -10000 ; target--)
+			{
+				long y = target - x;
+				
+				if(hashSet.contains(y))
+					count++;
+			}
+		}
+		
+		return count;
+	}
+}
