@@ -1,0 +1,160 @@
+package course2;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
+
+public class Week1_StronglyConnectedComponents 
+{
+
+    /**
+     * Adds a directed edge from 'from' to 'to' in the graph.
+     *
+     * @param graph The adjacency list representation of the graph
+     * @param from  The starting vertex of the edge
+     * @param to    The ending vertex of the edge
+     */
+    public void addEdge(List<Integer>[] graph, int from, int to) 
+    {
+        graph[from].add(to);
+    }
+
+    /**
+     * Performs a depth-first search (DFS) on the graph starting from the given node.
+     * This method is used to fill the stack with vertices in the order of their finishing times.
+     *
+     * @param graph   The adjacency list representation of the graph
+     * @param node    The starting vertex for DFS
+     * @param visited An array to keep track of visited vertices
+     * @param stack   A stack to store the vertices by their finishing times
+     */
+    public void depthFirstSearch(List<Integer>[] graph, int node, boolean[] visited, Stack<Integer> stack) 
+    {
+        visited[node] = true;
+        for (int neighbor : graph[node]) 
+        {
+            if (!visited[neighbor]) 
+            {
+                depthFirstSearch(graph, neighbor, visited, stack);
+            }
+        }
+        stack.push(node);  // Push the vertex to stack after all its neighbors are visited
+    }
+
+    /**
+     * Performs a depth-first search (DFS) on the reversed graph to find the size of the SCC.
+     *
+     * @param graph   The adjacency list representation of the reversed graph
+     * @param node    The starting vertex for DFS
+     * @param visited An array to keep track of visited vertices
+     * @return The size of the SCC that contains the starting vertex
+     */
+    public int depthFirstSearchForSCC(List<Integer>[] graph, int node, boolean[] visited) 
+    {
+        visited[node] = true;
+        int size = 1;  // Initial size of the SCC
+        for (int neighbor : graph[node]) 
+        {
+            if (!visited[neighbor]) 
+            {
+                size += depthFirstSearchForSCC(graph, neighbor, visited);
+            }
+        }
+        return size;
+    }
+
+    /**
+     * Finds the sizes of the five largest SCCs in the graph.
+     *
+     * @param graph        The adjacency list representation of the graph
+     * @param reversedGraph The adjacency list representation of the reversed graph
+     * @param vertexCount  The total number of vertices in the graph
+     * @return An array containing the sizes of the five largest SCCs
+     */
+    public int[] findLargestSCCs(List<Integer>[] graph, List<Integer>[] reversedGraph, int vertexCount) 
+    {
+        boolean[] visited = new boolean[vertexCount];
+        Stack<Integer> stack = new Stack<>();
+
+        // Step 1: Perform DFS on the original graph to fill the stack
+        for (int i = 0; i < vertexCount; i++) 
+        {
+            if (!visited[i]) 
+            {
+                depthFirstSearch(graph, i, visited, stack);
+            }
+        }
+
+        // Step 2: Perform DFS on the reversed graph to find SCCs
+        Arrays.fill(visited, false);  // Reset the visited array
+        PriorityQueue<Integer> sccSizes = new PriorityQueue<>(Collections.reverseOrder());  // Max-heap to store SCC sizes
+
+        while (!stack.isEmpty()) 
+        {
+            int node = stack.pop();
+            if (!visited[node]) 
+            {
+                int sccSize = depthFirstSearchForSCC(reversedGraph, node, visited);
+                sccSizes.offer(sccSize);  // Add the size of the found SCC to the priority queue
+            }
+        }
+
+        // Step 3: Extract the sizes of the five largest SCCs
+        int[] largestSCCs = new int[5];
+        for (int i = 0; i < 5; i++) 
+        {
+            if (!sccSizes.isEmpty()) 
+            {
+                largestSCCs[i] = sccSizes.poll();
+            } 
+            else 
+            {
+                largestSCCs[i] = 0;  // If less than 5 SCCs are found, fill the rest with 0
+            }
+        }
+
+        return largestSCCs;
+    }
+    
+    public static void main(String[] args) 
+    {
+        Week1_StronglyConnectedComponents sccFinder = new Week1_StronglyConnectedComponents();
+        int vertexCount = 875714;
+
+        // Initialize adjacency lists for the graph and its transpose
+        List<Integer>[] graph = new ArrayList[vertexCount];
+        List<Integer>[] reversedGraph = new ArrayList[vertexCount];
+        for (int i = 0; i < vertexCount; i++) 
+        {
+            graph[i] = new ArrayList<>();
+            reversedGraph[i] = new ArrayList<>();
+        }
+
+        // Load the graph from file
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course2\\SCC.txt"))) 
+        {
+            String line;
+            while ((line = br.readLine()) != null) 
+            {
+                String[] parts = line.split("\\s+");
+                int from = Integer.parseInt(parts[0]) - 1;
+                int to = Integer.parseInt(parts[1]) - 1;
+                sccFinder.addEdge(graph, from, to);
+                sccFinder.addEdge(reversedGraph, to, from);
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        // Find and print the sizes of the five largest SCCs
+        int[] largestSCCs = sccFinder.findLargestSCCs(graph, reversedGraph, vertexCount);
+        for (int size : largestSCCs) 
+        {
+            System.out.print(size + " ");
+        }
+        System.out.println();
+    }
+}

@@ -1,0 +1,77 @@
+package course1;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Week3_QuickSort 
+{
+
+    // Method to swap two elements in the array
+    public static void swapElements(int[] array, int index1, int index2) 
+    {
+        int temp = array[index2];
+        array[index2] = array[index1];
+        array[index1] = temp;
+    }
+
+    // Partition method to rearrange elements around the pivot (first element as pivot)
+    public static int partitionArray(int[] array, int left, int right) 
+    {
+        int pivot = array[left];
+        int i = left + 1;
+
+        for (int j = left + 1; j <= right; j++) 
+        {
+            if (array[j] < pivot) 
+            {
+                swapElements(array, i, j);
+                i++;
+            }
+        }
+        swapElements(array, left, i - 1);
+        return i - 1;
+    }
+
+    // QuickSort method
+    public static int quickSortArray(int[] array, int left, int right) 
+    {
+        if (right <= left) return 0;
+
+        // Using the first element as the pivot
+        int partitionIndex = partitionArray(array, left, right);
+
+        int leftCount = quickSortArray(array, left, partitionIndex - 1);
+        int rightCount = quickSortArray(array, partitionIndex + 1, right);
+
+        return leftCount + rightCount + right - left;
+    }
+
+    public static void main(String[] args) 
+    {
+        int arraySize = 10000;
+        int[] array = new int[arraySize];
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course1\\QuickSort.txt"))) 
+        {
+            String line;
+            int index = 0;
+            while ((line = reader.readLine()) != null) 
+            {
+                array[index] = Integer.parseInt(line);
+                index++;
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        // Perform QuickSort and print the number of comparisons
+        System.out.println(quickSortArray(array, 0, arraySize - 1));
+    }
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> 2c8347e8a5ff047ec742e3d1dd982c84e33796d0

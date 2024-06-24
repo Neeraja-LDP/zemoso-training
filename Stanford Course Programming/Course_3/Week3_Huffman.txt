@@ -1,0 +1,79 @@
+package course3;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.PriorityQueue;
+
+public class Week3_Huffman 
+{
+    // Nested class to represent a symbol with its weight and depth in the Huffman tree
+    static class Symbol implements Comparable<Symbol> 
+    {
+        int weight; // weight of the symbol
+        int depth;  // depth of the symbol in the Huffman tree
+
+        // Constructor to initialize weight and depth
+        Symbol(int weight, int depth) 
+        {
+            this.weight = weight;
+            this.depth = depth;
+        }
+
+        // Method to compare two Symbol objects based on their weights
+        @Override
+        public int compareTo(Symbol other) 
+        {
+            return Integer.compare(this.weight, other.weight);
+        }
+    }
+
+    public static void main(String[] args) throws IOException 
+    {
+        // BufferedReader to read the input file
+        BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course3\\huffman.txt"));
+        
+        // Read the first line to get the number of symbols
+        int numSymbols = Integer.parseInt(reader.readLine());
+
+        // PriorityQueue to store the symbols based on their weights
+        PriorityQueue<Symbol> priorityQueue = new PriorityQueue<>();
+        String line;
+
+        // Read each line to get the weight of each symbol and add it to the priority queue
+        while ((line = reader.readLine()) != null) 
+        {
+            int weight = Integer.parseInt(line);
+            priorityQueue.add(new Symbol(weight, 0));
+        }
+
+        // Close the reader after reading the file
+        reader.close();
+
+        int minLength = 0; // Variable to keep track of the minimum length of a codeword
+
+        // Process the symbols in the priority queue to construct the Huffman tree
+        while (priorityQueue.size() > 1) 
+        {
+            // Remove the two symbols with the smallest weights
+            Symbol first = priorityQueue.poll();
+            Symbol second = priorityQueue.poll();
+
+            // Combine the weights and update the depth
+            int combinedWeight = first.weight + second.weight;
+            int combinedDepth = Math.max(first.depth, second.depth) + 1;
+
+            // Update the minimum length if either of the symbols is at the root
+            if (first.depth == 0 || second.depth == 0) 
+            {
+                minLength = combinedDepth;
+            }
+
+            // Add the combined symbol back to the priority queue
+            priorityQueue.add(new Symbol(combinedWeight, combinedDepth));
+        }
+
+        // Print the maximum length of a codeword, which is the depth of the final remaining symbol
+        System.out.println(priorityQueue.peek().depth);
+    }
+}
