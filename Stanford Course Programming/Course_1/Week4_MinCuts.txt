@@ -1,0 +1,181 @@
+package course1;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Random;
+
+class Edge 
+{
+    int source, destination;
+}
+
+class Graph 
+{
+    int vertices, edges;
+    Edge[] edgeArray;
+}
+
+class Subset 
+{
+    int parent;
+    int rank;
+}
+
+public class Week4_MinCuts 
+{
+
+    // Find the subset a particular element is in
+    static int find(Subset[] subsets, int i) 
+    {
+        if (subsets[i].parent != i) 
+        {
+            subsets[i].parent = find(subsets, subsets[i].parent);
+        }
+        return subsets[i].parent;
+    }
+
+    // Union of two subsets based on rank
+    static void union(Subset[] subsets, int x, int y) 
+    {
+        int xRoot = find(subsets, x);
+        int yRoot = find(subsets, y);
+
+        if (subsets[xRoot].rank < subsets[yRoot].rank) 
+        {
+            subsets[xRoot].parent = yRoot;
+        } 
+        else if (subsets[xRoot].rank > subsets[yRoot].rank) 
+        {
+            subsets[yRoot].parent = xRoot;
+        } 
+        else 
+        {
+            subsets[yRoot].parent = xRoot;
+            subsets[xRoot].rank++;
+        }
+    }
+
+    // Karger's Random Contraction Algorithm
+    static int randomContraction(Graph graph) 
+    {
+        int vertices = graph.vertices;
+        int edges = graph.edges;
+        Edge[] edgeArray = graph.edgeArray;
+
+        Subset[] subsets = new Subset[vertices];
+        for (int v = 0; v < vertices; ++v) 
+        {
+            subsets[v] = new Subset();
+            subsets[v].parent = v;
+            subsets[v].rank = 0;
+        }
+
+        int remainingVertices = vertices;
+        Random rand = new Random();
+
+        while (remainingVertices > 2) 
+        {
+            int i = rand.nextInt(edges);
+
+            int subset1 = find(subsets, edgeArray[i].source);
+            int subset2 = find(subsets, edgeArray[i].destination);
+
+            if (subset1 == subset2) continue;
+
+            union(subsets, subset1, subset2);
+            remainingVertices--;
+        }
+
+        int cutEdges = 0;
+        for (int i = 0; i < edges; i++) {
+            int subset1 = find(subsets, edgeArray[i].source);
+            int subset2 = find(subsets, edgeArray[i].destination);
+            if (subset1 != subset2) cutEdges++;
+        }
+        return cutEdges;
+    }
+
+    // Create a graph with V vertices and E edges
+    static Graph createGraph(int vertices, int edges) 
+    {
+        Graph graph = new Graph();
+        graph.vertices = vertices;
+        graph.edges = edges;
+        graph.edgeArray = new Edge[edges];
+        for (int i = 0; i < edges; ++i) 
+        {
+            graph.edgeArray[i] = new Edge();
+        }
+        return graph;
+    }
+
+    public static void main(String[] args) 
+    {
+        int vertices = 200;
+        int edges = 0;
+
+        // First pass to count the number of edges
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course1\\kargerMinCut.txt"))) 
+        {
+            String line;
+            while ((line = reader.readLine()) != null) 
+            {
+                String[] parts = line.split("\\s+");
+                int vertex = Integer.parseInt(parts[0]);
+                for (int i = 1; i < parts.length; i++) 
+                {
+                    int val = Integer.parseInt(parts[i]);
+                    if (val > vertex) edges++;
+                }
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        Graph graph = createGraph(vertices, edges);
+
+        // Second pass to fill the edge list
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course1\\kargerMinCut.txt"))) 
+        {
+            String line;
+            int edgeCount = 0;
+            while ((line = reader.readLine()) != null) 
+            {
+                String[] parts = line.split("\\s+");
+                int vertex = Integer.parseInt(parts[0]) - 1;
+                for (int i = 1; i < parts.length; i++) 
+                {
+                    int val = Integer.parseInt(parts[i]) - 1;
+                    if (val > vertex) 
+                    {
+                        graph.edgeArray[edgeCount].source = vertex;
+                        graph.edgeArray[edgeCount].destination = val;
+                        edgeCount++;
+                    }
+                }
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        int minCut = Integer.MAX_VALUE;
+        for (int i = 0; i < 200; i++) 
+        {
+            int cut = randomContraction(graph);
+            if (cut < minCut) 
+            {
+                minCut = cut;
+            }
+        }
+        System.out.println(minCut);
+    }
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> 2c8347e8a5ff047ec742e3d1dd982c84e33796d0
