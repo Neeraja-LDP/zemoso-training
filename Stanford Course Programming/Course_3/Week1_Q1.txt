@@ -1,0 +1,89 @@
+package course3;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class Week1_Q1 
+{
+
+    // Class to represent a job with weight, length, and difference (weight - length)
+    static class Job 
+    {
+        int weight;
+        int length;
+        int difference;
+
+        Job(int weight, int length) 
+        {
+            this.weight = weight;
+            this.length = length;
+            this.difference = weight - length;
+        }
+    }
+
+    public static void main(String[] args) 
+    {
+        List<Job> jobList = new ArrayList<>();
+        
+        
+        // Read the job data from the file
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course3\\jobs.txt"))) 
+        {
+            String line;
+            
+            reader.readLine();
+            // Read each job's weight and length, and create Job objects
+            while ((line = reader.readLine()) != null) 
+            {
+                String[] parts = line.split(" ");
+                int weight = Integer.parseInt(parts[0]);
+                int length = Integer.parseInt(parts[1]);
+                jobList.add(new Job(weight, length));
+            }
+
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+            return;
+        }
+
+        // Sort the jobs based on the difference (weight - length) in decreasing order
+        // If two jobs have the same difference, sort by weight in decreasing order
+        Collections.sort(jobList, new Comparator<Job>() 
+        {
+            @Override
+            public int compare(Job job1, Job job2) 
+            {
+                int diff1 = job1.difference;
+                int diff2 = job2.difference;
+                if (diff1 != diff2) 
+                {
+                    return diff2 - diff1; // Decreasing order of difference
+                } 
+                else 
+                {
+                    return job2.weight - job1.weight; // Decreasing order of weight if differences are the same
+                }
+            }
+        });
+
+        long cumulativeLength = 0;
+        long weightedCompletionSum = 0;
+
+        // Calculate the sum of weighted completion times
+        for (Job job : jobList) 
+        {
+            cumulativeLength += job.length;
+            weightedCompletionSum += cumulativeLength * job.weight;
+        }
+
+        // Output the result
+        System.out.println(weightedCompletionSum);
+    }
+}

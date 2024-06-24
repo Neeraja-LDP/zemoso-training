@@ -1,0 +1,164 @@
+package course4;
+
+import java.io.*;
+import java.util.*;
+
+
+public class Week4_2SAT 
+{
+	// Constants to define maximum size
+    private static final int MAX = 2000001;
+
+    // Adjacency lists for the graph and its transpose
+    private static List<List<Integer>> graph = new ArrayList<>(MAX);
+    private static List<List<Integer>> transposedGraph = new ArrayList<>(MAX);
+
+    // Arrays to keep track of visited nodes
+    private static boolean[] visited = new boolean[MAX];
+    private static boolean[] transposedVisited = new boolean[MAX];
+
+    // Stack to store the order of nodes
+    private static Stack<Integer> nodeStack = new Stack<>();
+
+    // Array to store strongly connected components
+    private static int[] scc = new int[MAX];
+
+    // Counter to count SCCs
+    private static int sccCounter = 1;
+
+    // Initialize adjacency lists
+    static 
+    {
+        for (int i = 0; i < MAX; i++) 
+        {
+            graph.add(new ArrayList<>());
+            transposedGraph.add(new ArrayList<>());
+        }
+    }
+
+    // Method to add edges to the graph
+    private static void addEdge(int from, int to) 
+    {
+        graph.get(from).add(to);
+    }
+
+    // Method to add edges to the transposed graph
+    private static void addEdgeToTranspose(int from, int to) 
+    {
+        transposedGraph.get(to).add(from);
+    }
+
+    // Depth-first search on the original graph
+    private static void dfs(int node) 
+    {
+        if (visited[node]) return;
+
+        visited[node] = true;
+
+        for (int neighbor : graph.get(node)) 
+        {
+            dfs(neighbor);
+        }
+
+        nodeStack.push(node);
+    }
+
+    // Depth-first search on the transposed graph
+    private static void dfsOnTransposed(int node) 
+    {
+        if (transposedVisited[node]) return;
+
+        transposedVisited[node] = true;
+
+        for (int neighbor : transposedGraph.get(node)) 
+        {
+            dfsOnTransposed(neighbor);
+        }
+
+        scc[node] = sccCounter;
+    }
+
+    public static void main(String[] args) throws IOException 
+    {
+        // Read the file
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course4\\2sat1.txt"));
+        int n = Integer.parseInt(br.readLine().trim());
+        String line;
+        
+        // Read the clauses and construct the graph
+        while ((line = br.readLine()) != null) 
+        {
+            String[] parts = line.split(" ");
+            int a = Integer.parseInt(parts[0]);
+            int b = Integer.parseInt(parts[1]);
+
+            // Add edges based on the clauses
+            if (a > 0 && b > 0) 
+            {
+                addEdge(a + n, b);
+                addEdgeToTranspose(a + n, b);
+                addEdge(b + n, a);
+                addEdgeToTranspose(b + n, a);
+            } 
+            else if (a > 0 && b < 0) 
+            {
+                addEdge(a + n, n - b);
+                addEdgeToTranspose(a + n, n - b);
+                addEdge(-b, a);
+                addEdgeToTranspose(-b, a);
+            } 
+            else if (a < 0 && b > 0) 
+            {
+                addEdge(-a, b);
+                addEdgeToTranspose(-a, b);
+                addEdge(b + n, n - a);
+                addEdgeToTranspose(b + n, n - a);
+            } 
+            else 
+            {
+                addEdge(-a, n - b);
+                addEdgeToTranspose(-a, n - b);
+                addEdge(-b, n - a);
+                addEdgeToTranspose(-b, n - a);
+            }
+        }
+
+        // Perform DFS on the original graph to fill the stack
+        for (int i = 1; i <= 2 * n; i++) 
+        {
+            if (!visited[i]) dfs(i);
+        }
+
+        // Perform DFS on the transposed graph based on the order in the stack
+        while (!nodeStack.isEmpty()) 
+        {
+            int node = nodeStack.pop();
+
+            if (!transposedVisited[node]) 
+            {
+                dfsOnTransposed(node);
+                sccCounter++;
+            }
+        }
+
+        // Check for satisfiability
+        boolean isSatisfiable = true;
+
+        for (int i = 1; i <= n; i++) 
+        {
+            if (scc[i] == scc[i + n]) 
+            {
+                System.out.println("Unsatisfiable");
+                isSatisfiable = false;
+                break;
+            }
+        }
+
+        if (isSatisfiable) 
+        {
+            System.out.println("Satisfiable");
+        }
+        
+        br.close();
+    }
+}
