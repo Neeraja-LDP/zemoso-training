@@ -1,0 +1,88 @@
+package course3;
+import java.io.*;
+import java.util.*;
+
+
+public class Week3_DynamicProgramming 
+{
+	public static void main(String[] args) 
+	{
+        try 
+        {
+            // Open the file containing the weights of the vertices
+            File file = new File("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course3\\mwis.txt");
+            Scanner scanner = new Scanner(file);
+            
+            // Read the number of vertices
+            int numberOfVertices = scanner.nextInt();
+            
+            // Array to store the weights of the vertices
+            int[] weights = new int[numberOfVertices + 1];
+            
+            // Read the weights from the file
+            for (int i = 1; i <= numberOfVertices; i++) 
+            {
+                weights[i] = scanner.nextInt();
+            }
+            scanner.close();
+            
+            // Array to store the maximum weight of the independent set up to each vertex
+            int[] maxWeights = new int[numberOfVertices + 1];
+            maxWeights[0] = 0; // Base case: no vertex means weight 0
+            maxWeights[1] = weights[1]; // Base case: only one vertex
+            
+            // Fill the maxWeights array using dynamic programming
+            for (int i = 2; i <= numberOfVertices; i++) 
+            {
+                maxWeights[i] = Math.max(maxWeights[i - 1], maxWeights[i - 2] + weights[i]);
+            }
+            
+            // Set to store the vertices included in the maximum-weight independent set
+            Set<Integer> mwisSet = new HashSet<>();
+            
+            // Reconstruction of the MWIS from the maxWeights array
+            int i = numberOfVertices;
+            while (i >= 2) 
+            {
+                if (maxWeights[i - 1] >= maxWeights[i - 2] + weights[i]) 
+                {
+                    i--;
+                } 
+                else 
+                {
+                    mwisSet.add(i);
+                    i -= 2;
+                }
+            }
+            if (i == 1) 
+            {
+                mwisSet.add(1);
+            }
+            
+            // Vertices to check: 1, 2, 3, 4, 17, 117, 517, and 997
+            int[] verticesToCheck = {1, 2, 3, 4, 17, 117, 517, 997};
+            
+            // Build the 8-bit string result
+            StringBuilder result = new StringBuilder();
+            for (int vertex : verticesToCheck) 
+            {
+                if (mwisSet.contains(vertex)) 
+                {
+                    result.append('1');
+                } 
+                else 
+                {
+                    result.append('0');
+                }
+            }
+            
+            // Output the result
+            System.out.println(result.toString());
+            
+        } 
+        catch (FileNotFoundException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+}

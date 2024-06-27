@@ -1,0 +1,134 @@
+
+package course1;
+
+import java.math.BigInteger;
+
+public class Week1_Karatsuba 
+{
+	public static void main(String[] args) {
+        String num1 = "3141592653589793238462643383279502884197169399375105820974944592";
+        String num2 = "2718281828459045235360287471352662497757247093699959574966967627";
+
+        // Testing with smaller numbers
+        // String num1 = "5678";
+        // String num2 = "1234";
+
+        String result = karatsubaMultiply(num1, num2);
+        System.out.println(result);
+    }
+
+    public static String karatsubaMultiply(String x, String y) 
+    {
+        // Base case for recursion
+        if (x.length() == 1 && y.length() == 1) 
+        {
+            return new BigInteger(x).multiply(new BigInteger(y)).toString();
+        }
+
+        // Make lengths of both numbers equal by padding with leading zeros on the left
+        int maxLength = Math.max(x.length(), y.length());
+        x = padLeftZeros(x, maxLength);
+        y = padLeftZeros(y, maxLength);
+
+        int n = maxLength;
+        int half = n / 2;
+
+        // Split x and y into two halves
+        String x1 = x.substring(0, n - half);
+        String x0 = x.substring(n - half);
+        String y1 = y.substring(0, n - half);
+        String y0 = y.substring(n - half);
+
+        // Recursively calculate three products
+        String z2 = karatsubaMultiply(x1, y1);
+        String z0 = karatsubaMultiply(x0, y0);
+        String z1 = karatsubaMultiply(addStrings(x1, x0), addStrings(y1, y0));
+        z1 = subtractStrings(subtractStrings(z1, z2), z0);
+
+        // Combine the results
+        String result = addStrings(addStrings(padZeros(z2, 2 * half), padZeros(z1, half)), z0);
+        return result.replaceFirst("^0+(?!$)", ""); // Trim leading zeros
+    }
+
+    /**
+     * Method to add two strings containing numbers together
+     */
+    private static String addStrings(String num1, String num2) 
+    {
+        // Ensuring that the numbers are of equal length
+        int maxLength = Math.max(num1.length(), num2.length());
+        num1 = padLeftZeros(num1, maxLength);
+        num2 = padLeftZeros(num2, maxLength);
+
+        int carry = 0;
+        
+        StringBuilder result = new StringBuilder();
+        for (int i = maxLength - 1; i >= 0; i--) 
+        {
+            int sum = (num1.charAt(i) - '0') + (num2.charAt(i) - '0') + carry;
+
+            // Calculating the next carry
+            carry = sum / 10;
+
+            // Appending the number to result
+            result.append(sum % 10);
+        }
+
+        // When the end of the calculations is reached and there is a carry left over
+        if (carry > 0) {
+            result.append(carry);
+        }
+
+        return result.reverse().toString();
+    }
+
+    /**
+     * Method to subtract two strings containing numbers
+     */
+    private static String subtractStrings(String num1, String num2) {
+        // Ensuring that the numbers are of equal length
+        int maxLength = Math.max(num1.length(), num2.length());
+        num1 = padLeftZeros(num1, maxLength);
+        num2 = padLeftZeros(num2, maxLength);
+
+        int borrow = 0;
+        StringBuilder result = new StringBuilder();
+        for (int i = maxLength - 1; i >= 0; i--) {
+            int diff = (num1.charAt(i) - '0') - (num2.charAt(i) - '0') - borrow;
+            // If the difference is less than zero, borrow a 1
+            if (diff < 0) {
+                diff += 10;
+                borrow = 1;
+            } else { // If there is nothing to borrow, set borrow to 0
+                borrow = 0;
+            }
+
+            // Append the difference to the result
+            result.append(diff);
+        }
+        return result.reverse().toString().replaceFirst("^0+(?!$)", ""); // Trim leading zeros
+    }
+
+    /**
+     * Method to pad a string with zeroes to the left
+     */
+    private static String padLeftZeros(String num, int length) {
+        StringBuilder sb = new StringBuilder();
+        while (sb.length() + num.length() < length) {
+            sb.append('0');
+        }
+        sb.append(num);
+        return sb.toString();
+    }
+
+    /**
+     * Method to pad a string with zeroes to the right
+     */
+    private static String padZeros(String num, int zeros) {
+        StringBuilder padding = new StringBuilder();
+        for (int i = 0; i < zeros; i++) {
+            padding.append('0');
+        }
+        return num + padding;
+    }
+}

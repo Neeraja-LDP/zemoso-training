@@ -1,0 +1,112 @@
+package course3;
+
+import java.io.*;
+import java.util.*;
+
+public class Week1_Q3 
+{
+    
+    // Method to add edge to the adjacency list representation of the graph
+    private static void addEdge(List<List<Pair>> adj, int source, int destination, int weight) 
+    {
+        adj.get(source).add(new Pair(destination, weight));
+        adj.get(destination).add(new Pair(source, weight));
+    }
+    
+    // Method to find the vertex with the minimum value which is not yet visited
+    private static int findMinVertex(int[] value, boolean[] visited, int numVertices) 
+    {
+        int minimum = Integer.MAX_VALUE;
+        int vertex = -1;
+        for (int i = 0; i < numVertices; i++) 
+        {
+            if (!visited[i] && value[i] < minimum) 
+            {
+                minimum = value[i];
+                vertex = i;
+            }
+        }
+        return vertex;
+    }
+    
+    public static void main(String[] args) throws IOException 
+    {
+        // Reading the graph data from the file
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course3\\edges.txt"));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int numVertices = Integer.parseInt(st.nextToken());
+        int numEdges = Integer.parseInt(st.nextToken());
+        
+        // Initialize the adjacency matrix representation of the graph
+        int[][] graph = new int[numVertices][numVertices];
+        
+        // Reading edges and their weights from the file
+        while (br.ready()) 
+        {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            int wt = Integer.parseInt(st.nextToken());
+            graph[a-1][b-1] = wt;
+            graph[b-1][a-1] = wt;
+        }
+        br.close();
+        
+        // Initialize visited array to keep track of visited vertices
+        boolean[] visited = new boolean[numVertices];
+        
+        // Initialize value array to store the minimum weight to reach each vertex
+        int[] value = new int[numVertices];
+        Arrays.fill(value, Integer.MAX_VALUE);
+        
+        // Initialize parent array to store the constructed MST
+        int[] parent = new int[numVertices];
+        
+        // Start from the first vertex
+        parent[0] = -1;
+        value[0] = 0;
+        
+        // Prim's algorithm to construct MST
+        for (int i = 0; i < numVertices - 1; i++) 
+        {
+            // Find the vertex with the minimum value which is not yet visited
+            int d = findMinVertex(value, visited, numVertices);
+            
+            // Mark the vertex as visited
+            visited[d] = true;
+            
+            // Update the value and parent arrays for adjacent vertices
+            for (int j = 0; j < numVertices; j++) 
+            {
+                if (!visited[j] && graph[d][j] != 0 && graph[d][j] < value[j]) 
+                {
+                    value[j] = graph[d][j];
+                    parent[j] = d;
+                }
+            }
+        }
+        
+        // Calculate the total cost of the MST
+        long cost = 0;
+        for (int i = 1; i < numVertices; i++) 
+        {
+            cost += graph[i][parent[i]];
+        }
+        
+        // Print the total cost of the MST
+        System.out.println(cost);
+    }
+    
+    // Helper class to represent an edge with a destination vertex and a weight
+    private static class Pair 
+    {
+        int destination;
+        int weight;
+        
+        Pair(int destination, int weight) 
+        {
+            this.destination = destination;
+            this.weight = weight;
+        }
+    }
+}
