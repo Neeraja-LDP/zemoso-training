@@ -1,0 +1,103 @@
+package course2;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+
+public class Week2_DijkstrasAlgorithm 
+{
+
+    static final int V = 200; // Number of vertices
+
+    // Method to find the vertex with the minimum distance value
+    // from the set of vertices not yet processed
+    int findMinDistance(int shortestDist[], boolean visited[]) 
+    {
+        int minDist = Integer.MAX_VALUE;
+        int index = -1;
+
+        // Iterate through all vertices to find the minimum distance vertex
+        for (int i = 0; i < V; i++) 
+        {
+            if (!visited[i] && shortestDist[i] <= minDist) 
+            {
+                minDist = shortestDist[i];
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    // Method that implements Dijkstra's single source shortest path algorithm
+    // for a graph represented using adjacency matrix
+    void dijkstra(int graph[][], int src) 
+    {
+        int shortestDist[] = new int[V]; // Array to hold the shortest distance from source to i
+        boolean visited[] = new boolean[V]; // visited[i] will be true if vertex i is included in the shortest path tree
+
+        // Initialize all distances as INFINITE and visited[] as false
+        Arrays.fill(shortestDist, Integer.MAX_VALUE);
+        Arrays.fill(visited, false);
+
+        // Distance of source vertex from itself is always 0
+        shortestDist[src] = 0;
+
+        // Find shortest path for all vertices
+        for (int count = 0; count < V - 1; count++) 
+        {
+            // Pick the minimum distance vertex from the set of vertices not yet processed
+            int u = findMinDistance(shortestDist, visited);
+
+            // Mark the picked vertex as processed
+            visited[u] = true;
+
+            // Update shortestDist value of the adjacent vertices of the picked vertex
+            for (int v = 0; v < V; v++) 
+            {
+                // Update shortestDist[v] only if is not in visited, there is an edge from
+                // u to v, and total weight of path from src to v through u is smaller than current value of shortestDist[v]
+                if (!visited[v] && graph[u][v] != 0 && shortestDist[u] != Integer.MAX_VALUE && shortestDist[u] + graph[u][v] < shortestDist[v]) 
+                {
+                    shortestDist[v] = shortestDist[u] + graph[u][v];
+                }
+            }
+        }
+
+        // Output the shortest distances to the specified vertices
+        int[] list = {7, 37, 59, 82, 99, 115, 133, 165, 188, 197};
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < list.length; i++) 
+        {
+            result.append(shortestDist[list[i] - 1]).append(",");
+        }
+        System.out.println(result.toString());
+    }
+
+    public static void main(String[] args) {
+        int[][] adj = new int[V][V];
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course2\\dijkstra.txt"))) 
+        {
+            String line;
+            while ((line = br.readLine()) != null) 
+            {
+                String[] parts = line.split("\\s+");
+                int source = Integer.parseInt(parts[0]) - 1;
+                for (int i = 1; i < parts.length; i++) 
+                {
+                    String[] edge = parts[i].split(",");
+                    int end = Integer.parseInt(edge[0]) - 1;
+                    int length = Integer.parseInt(edge[1]);
+                    adj[source][end] = length;
+                }
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        Week2_DijkstrasAlgorithm dijkstra = new Week2_DijkstrasAlgorithm();
+        dijkstra.dijkstra(adj, 0);
+    }
+}

@@ -1,0 +1,103 @@
+package course4;
+
+import java.io.*;
+import java.util.*;
+
+public class Week1_ShortestShortestPath 
+{
+    // Define the maximum number of vertices
+    private static final int MAX_VERTICES = 1000;
+
+    // Method to implement the Floyd-Warshall algorithm
+    public static void computeShortestPaths(int[][] distances) 
+    {
+        // Update the distance matrix to find the shortest paths
+        for (int k = 0; k < MAX_VERTICES; k++) 
+        {
+            for (int i = 0; i < MAX_VERTICES; i++) 
+            {
+                for (int j = 0; j < MAX_VERTICES; j++) 
+                {
+                    // Skip if there is no path through vertex k
+                    if (distances[i][k] == Integer.MAX_VALUE || distances[k][j] == Integer.MAX_VALUE) 
+                    {
+                        continue;
+                    }
+                    // Update the distance if a shorter path is found
+                    if (distances[i][k] + distances[k][j] < distances[i][j]) {
+                        distances[i][j] = distances[i][k] + distances[k][j];
+                    }
+                }
+            }
+        }
+
+        // Check for negative edge cycles
+        for (int i = 0; i < MAX_VERTICES; i++) 
+        {
+            if (distances[i][i] < 0) 
+            {
+                System.out.println("Negative edge cycle detected");
+                return;
+            }
+        }
+
+        // Find and print the minimum distance in the distance matrix
+        int minimumDistance = Integer.MAX_VALUE;
+        for (int i = 0; i < MAX_VERTICES; i++) 
+        {
+            for (int j = 0; j < MAX_VERTICES; j++) 
+            {
+                if (distances[i][j] < minimumDistance) 
+                {
+                    minimumDistance = distances[i][j];
+                }
+            }
+        }
+        System.out.println(minimumDistance);
+    }
+
+    public static void main(String[] args) 
+    {
+        try 
+        {
+            // Read the number of vertices and edges from the file
+            Scanner scanner = new Scanner(new File("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course4\\g3.txt"));
+            int vertices = scanner.nextInt();
+            int edges = scanner.nextInt();
+            
+            // Initialize the distance matrix
+            int[][] distances = new int[MAX_VERTICES][MAX_VERTICES];
+            for (int i = 0; i < MAX_VERTICES; i++) 
+            {
+                for (int j = 0; j < MAX_VERTICES; j++) 
+                {
+                    if (i == j) 
+                    {
+                        distances[i][j] = 0; // Distance to itself is 0
+                    } 
+                    else 
+                    {
+                        distances[i][j] = Integer.MAX_VALUE; // No path initially
+                    }
+                }
+            }
+
+            // Read the edges from the file and populate the distance matrix
+            while (scanner.hasNextInt()) 
+            {
+                int src = scanner.nextInt();
+                int dst = scanner.nextInt();
+                int weight = scanner.nextInt();
+                distances[src - 1][dst - 1] = weight;
+            }
+            scanner.close();
+
+            // Compute the shortest paths using the Floyd-Warshall algorithm
+            computeShortestPaths(distances);
+        } 
+        catch (FileNotFoundException e) 
+        {
+            System.err.println("File not found: " + e.getMessage());
+        }
+    }
+}

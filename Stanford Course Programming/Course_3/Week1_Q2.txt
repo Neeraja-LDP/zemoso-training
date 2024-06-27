@@ -1,0 +1,80 @@
+package course3;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class Week1_Q2 
+{
+
+    // Class to represent a job with weight, length, and ratio (weight / length)
+    static class Job 
+    {
+        double weight;
+        double length;
+        double ratio;
+
+        Job(double weight, double length) 
+        {
+            this.weight = weight;
+            this.length = length;
+            this.ratio = weight / length;
+        }
+    }
+
+    public static void main(String[] args) 
+    {
+        List<Job> jobList = new ArrayList<>();
+        int numberOfJobs;
+
+        // Read the job data from the file
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course3\\jobs.txt"))) 
+        {
+            numberOfJobs = Integer.parseInt(reader.readLine());
+            String line;
+
+            // Read each job's weight and length, and create Job objects
+            while ((line = reader.readLine()) != null) 
+            {
+                String[] parts = line.split(" ");
+                double weight = Double.parseDouble(parts[0]);
+                double length = Double.parseDouble(parts[1]);
+                jobList.add(new Job(weight, length));
+            }
+
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+            return;
+        }
+
+        // Sort the jobs based on the ratio (weight / length) in decreasing order
+        // In this problem, it does not matter how we break ties
+        Collections.sort(jobList, new Comparator<Job>() 
+        {
+            @Override
+            public int compare(Job job1, Job job2) 
+            {
+                return Double.compare(job2.ratio, job1.ratio); // Decreasing order of ratio
+            }
+        });
+
+        long cumulativeLength = 0;
+        long weightedCompletionSum = 0;
+
+        // Calculate the sum of weighted completion times
+        for (Job job : jobList) 
+        {
+            cumulativeLength += job.length;
+            weightedCompletionSum += cumulativeLength * job.weight;
+        }
+
+        // Output the result
+        System.out.println(weightedCompletionSum);
+    }
+}
