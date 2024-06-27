@@ -1,0 +1,133 @@
+package course3;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+class UnionFind 
+{
+    private int[] parent;
+    private int[] size;
+    private int count;
+
+    public UnionFind(int n) 
+    {
+        parent = new int[n];
+        size = new int[n];
+        count = n;
+        for (int i = 0; i < n; i++) 
+        {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    public int find(int p) 
+    {
+        while (p != parent[p]) 
+        {
+            parent[p] = parent[parent[p]];
+            p = parent[p];
+        }
+        return p;
+    }
+
+    public void union(int x, int y) 
+    {
+        int rootX = find(x);
+        int rootY = find(y);
+        if (rootX == rootY) return;
+
+        if (size[rootX] < size[rootY]) 
+        {
+            parent[rootX] = rootY;
+            size[rootY] += size[rootX];
+        } 
+        else 
+        {
+            parent[rootY] = rootX;
+            size[rootX] += size[rootY];
+        }
+        count--;
+    }
+
+    public boolean connected(int x, int y) 
+    {
+        return find(x) == find(y);
+    }
+
+    public int count() 
+    {
+        return count;
+    }
+}
+
+class Edge 
+{
+    int node1, node2, cost;
+
+    public Edge(int node1, int node2, int cost) 
+    {
+        this.node1 = node1;
+        this.node2 = node2;
+        this.cost = cost;
+    }
+}
+
+public class Week2_KruskalMST 
+{
+    public int clustering(int numOfClusters, int numOfNodes, ArrayList<Edge> edges) 
+    {
+        Collections.sort(edges, Comparator.comparingInt(e -> e.cost));
+        UnionFind uf = new UnionFind(numOfNodes);
+
+        int index = 0;
+        while (uf.count() > numOfClusters) 
+        {
+            Edge edge = edges.get(index);
+            if (!uf.connected(edge.node1, edge.node2)) 
+            {
+                uf.union(edge.node1, edge.node2);
+            }
+            index++;
+        }
+
+        while (uf.connected(edges.get(index).node1, edges.get(index).node2)) 
+        {
+            index++;
+        }
+
+        return edges.get(index).cost;
+    }
+
+    public static void main(String[] args) 
+    {
+        ArrayList<Edge> edges = new ArrayList<>();
+        int numOfNodes = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\rajuv\\eclipse-workspace\\StanfordCourseProgrammingAssignments\\src\\course3\\clustering.txt"))) 
+        {
+            numOfNodes = Integer.parseInt(br.readLine());
+            String line;
+            while ((line = br.readLine()) != null) 
+            {
+                String[] parts = line.split(" ");
+                int node1 = Integer.parseInt(parts[0]) - 1;
+                int node2 = Integer.parseInt(parts[1]) - 1;
+                int cost = Integer.parseInt(parts[2]);
+                edges.add(new Edge(node1, node2, cost));
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        Week2_KruskalMST wk2 = new Week2_KruskalMST();
+        int k = 4;  // Number of clusters
+        int maxSpacing = wk2.clustering(k, numOfNodes, edges);
+        System.out.println(maxSpacing);
+    }
+}
